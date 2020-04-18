@@ -1,0 +1,49 @@
+#!/bin/sh
+
+# many arts found at
+# https://www.asciipr0n.com/pr0n/anime.html
+
+# -w [waifu]
+# -l list waifus
+
+MAX_WIDTH=60
+wflag=
+lflag=
+waifu="lenny"
+while getopts lw: argus
+do
+    case $argus in
+        l) ls waifus/
+            lflag=1 ;;
+        w) wflag=1
+            waifu="$OPTARG" ;;
+        ?) printf "Usage: %s: [-l] [-l waifu] STRING\n" $0
+            exit 2;;
+    esac
+done
+shift $(($OPTIND - 1))
+if [ -z $lflag ]; then
+    input=$1
+    inputs=
+    # ${#inputs[@]}
+    inputs=$(echo $input | fmt --width=$MAX_WIDTH)
+    SPACES=$(echo -n $input | wc -m)
+    [ $SPACES -gt $MAX_WIDTH ] && SPACES=$MAX_WIDTH
+    
+    bar="="
+    for i in `seq 0 $SPACES`
+    do
+        bar="${bar}="
+    done
+    
+    echo "      /$bar\\"
+    # echo "      | $input |"
+    while IFS= read -r line
+    do
+        printf "      | %-${MAX_WIDTH}s%-1s|\n" "${line:0:${MAX_WIDTH}}" " "
+    done <<< $inputs
+    # for i in `seq 1 $inputs_length`
+    echo "      \\$bar/"
+    
+    echo "$(<waifus/$waifu.waifu)"
+fi
