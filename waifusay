@@ -27,7 +27,7 @@ if [ -z $lflag ]; then
     inputs=
     # ${#inputs[@]}
     inputs=$(echo "$input" | fmt --width=$MAX_WIDTH)
-    SPACES=$(echo -n "$input" | wc -m)
+    SPACES=$(echo "$input" | wc -m)
     [ "$SPACES" -gt "$MAX_WIDTH" ] && SPACES=$MAX_WIDTH
     
     bar="="
@@ -37,11 +37,11 @@ if [ -z $lflag ]; then
     done
     
     echo "      /$bar\\"
-    while IFS= read -r line
+    printf '%s' "$inputs" | while IFS= read -r line
     do
-        printf "      | %-${MAX_WIDTH}s%-1s|\n" "${line:0:${MAX_WIDTH}}" " "
-    done <<< "$inputs"
+        printf "      | %-${MAX_WIDTH}s%-1s|\n" "$(echo "$line" | awk '{ sctring=substr($0, 1, 60); print sctring; }' )" " "
+    done
     echo "      \\$bar/"
     
-    echo "$(<waifus/"$waifu".waifu)"
+    echo "$( <waifus/"$waifu".waifu )"
 fi
